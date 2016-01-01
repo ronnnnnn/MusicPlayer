@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_music_name"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:background="#285CB5"
+        android:gravity="center_vertical"
+        android:text="@string/music_player"
+        android:textColor="#FFFFFF"
+        android:textSize="?android:attr/textAppearanceLarge" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:gravity="center" >
+
+        <ImageView
+            android:id="@+id/iv_music_picture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/music_picture_default1" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="10dp" >
+
+            <ImageButton
+                android:id="@+id/bt_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/music_back" />
+
+            <ImageButton
+                android:id="@+id/bt_play_and_stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/music_play1" />
+
+            <ImageButton
+                android:id="@+id/bt_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/music_next" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/sb_control"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:paddingTop="10dp"
+            />
+    </LinearLayout>
+
+</LinearLayout>

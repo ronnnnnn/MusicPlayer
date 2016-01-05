@@ -1,6 +1,8 @@
 package com.example.musicplayer.service;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.example.musicplayer.config.MyConfig;
 
@@ -12,21 +14,49 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.util.Log;
 
 public class MusicPlayerService extends Service {
 
-	
 	private String url;
-	private  boolean isPause;
+	private int progress;
+	private boolean isPause;
 	private MediaPlayer mediaPlayer = new MediaPlayer();
-    
-	
-    public class MyserviceCallBack extends Binder{
-		
-		public boolean getServiceCallBack(){
+
+	private int currentTime;
+
+	private Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+
+			if (msg.what == 1) {
+				if (mediaPlayer != null) {
+					 synchronized (this){
+					currentTime = mediaPlayer.getCurrentPosition();
+					}
+					Intent intent2 = new Intent();
+					intent2.putExtra("currentTime", currentTime);
+					intent2.putExtra("isPause", isPause);
+					intent2.setAction("com.ron.tochange");
+					sendBroadcast(intent2);	
+					handler.sendEmptyMessageDelayed(1, 1000);
+				}
+			}
+		};
+	};
+
+	public class MyserviceCallBack extends Binder {
+
+		public boolean getServiceCallBack() {
 			return isPause;
 		}
-		
+
+	}
+
+	@Override
+	public void onCreate() {
+		// TODO Auto-generated method stub
+		super.onCreate();
+		Log.d("draw","draw");
 	}
 	
 	@Override
@@ -40,42 +70,55 @@ public class MusicPlayerService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 
+		
+
 		if (mediaPlayer.isPlaying()) {
-            stop();
+			stop();
 		}
 		url = intent.getStringExtra("url");
+		progress = intent.getIntExtra("progress", 0);
 		int msg = intent.getIntExtra("MSG", 0);
 
 		if (msg == MyConfig.MUSIC_PALY) {
-             play(0);
-		}else if(msg == MyConfig.MUSIC_PAUSE){
+			play(0);
+		}else if (msg == MyConfig.MUSIC_PAUSE) {
 			pause();
-		}else if(msg == MyConfig.MUSIC_STOP){
+			
+		}else if (msg == MyConfig.MUSIC_STOP) {
 			stop();
+		}else if (msg == MyConfig.MUSIC_RESUME) {
+			
+			resume();
+		}else if (msg == MyConfig.MUSIC_PROGRESS) {
+			
+			play(progress);
 		}
 
 		return super.onStartCommand(intent, flags, startId);
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		if(mediaPlayer != null){
+		if (mediaPlayer != null) {
 			mediaPlayer.stop();
 			mediaPlayer.release();
 		}
 	}
 
 	private void play(int position) {
-       
-        try { 
-        	
-        	mediaPlayer.reset();
+
+		try {
+
+			mediaPlayer.reset();
 			mediaPlayer.setDataSource(url);
 			mediaPlayer.prepare();
 			mediaPlayer.setOnPreparedListener(new PreparedListener(position));
 			isPause = false;
+			
+		handler.sendEmptyMessage(1);
+
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -92,48 +135,60 @@ public class MusicPlayerService extends Service {
 	}
 
 	private void stop() {
-       if(mediaPlayer != null){
-    	   mediaPlayer.stop();
-    	   
-    	   try {
-			mediaPlayer.prepare();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (mediaPlayer != null) {
+			mediaPlayer.stop();
+
+			try {
+				mediaPlayer.prepare();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-       }
 	}
 
 	private void pause() {
-        if(mediaPlayer != null && mediaPlayer.isPlaying()){
-        	mediaPlayer.pause();
-        	isPause = true;
-        }
+		
+			mediaPlayer.pause();
+			isPause = true;
+			mediaPlayer.pause();
+			Log.d("stopAction","excute");
+					
 	}
 	
-	private final class PreparedListener implements OnPreparedListener{
-
-		private int position;
-		
-		public PreparedListener(int position) {
-			// TODO Auto-generated constructor stub
-			
-			this.position = position;
-			
+	private void resume(){
+		if (isPause) {
+			mediaPlayer.pause();
+			isPause = false;
+			int position = mediaPlayer.getCurrentPosition();
+			play(position);
+			Log.d("stopAction","excute");
 		}
 		
+	}
+
+	private final class PreparedListener implements OnPreparedListener {
+
+		private int position;
+
+		public PreparedListener(int position) {
+			// TODO Auto-generated constructor stub
+
+			this.position = position;
+		}
+
 		@Override
 		public void onPrepared(MediaPlayer mp) {
 			// TODO Auto-generated method stub
 			mediaPlayer.start();
-			if(position > 0){
+			if (position > 0) {
 				mediaPlayer.seekTo(position);
 			}
 		}
-		
+
 	}
 
 }

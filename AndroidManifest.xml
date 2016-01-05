@@ -32,6 +32,15 @@
         <service android:name="com.example.musicplayer.service.MusicPlayerService" >
         </service>
         
+         <receiver android:name="com.example.musicplayer.receive.SystemReceiver">  
+            <intent-filter>  
+                <action android:name="com.ron.change" />  
+            </intent-filter>  
+        </receiver>  
+        
+    
+         
+        
     </application>
 
 </manifest>

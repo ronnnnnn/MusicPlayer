@@ -12,21 +12,24 @@
         android:background="#285CB5"
         android:gravity="center_vertical"
         android:text="@string/music_player"
-        android:textColor="#FFFFFF"
-        android:textSize="?android:attr/textAppearanceLarge" />
+        android:textColor="#FFFFFF" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="10"
         android:gravity="center" >
 
-        <ImageView
+        <EditText
             android:id="@+id/iv_music_picture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/music_picture_default1" />
-    </RelativeLayout>
+            android:background="@drawable/music_picture_default1"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="this is test"
+            android:textColor="#00EEEE" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,6 +43,12 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingTop="10dp" >
+
+            <ImageButton
+                android:id="@+id/bt_follow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/follow" />
 
             <ImageButton
                 android:id="@+id/bt_back"
@@ -58,14 +67,41 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/music_next" />
+
+            <ImageButton
+                android:id="@+id/bt_rondom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rondom" />
         </LinearLayout>
 
         <SeekBar
             android:id="@+id/sb_control"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" 
-            android:paddingTop="10dp"
-            />
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tv_time_head"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:paddingLeft="10dp"
+                android:text="00:00" />
+
+            <TextView
+                android:id="@+id/tv_time_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:paddingRight="10dp"
+                android:text="01:00" />
+        </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>

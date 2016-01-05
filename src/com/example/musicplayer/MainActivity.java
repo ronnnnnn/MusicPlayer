@@ -55,16 +55,16 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated method stub
 				if (status == 1) {
 					Intent intent = new Intent();
-					intent.putExtra("MSG", MyConfig.MUSIC_PALY);
+					intent.putExtra("MSG", MyConfig.MUSIC_PAUSE);
 					intent.setClass(MainActivity.this, MusicPlayerService.class);
 					status = 0;
 					buttonPlay.setBackgroundResource(R.drawable.music_play);
-					stopService(intent);
+					startService(intent);
 
 				} else {
 					Intent intent = new Intent();
 					intent.putExtra("url", url);
-					intent.putExtra("MSG", MyConfig.MUSIC_PALY);
+					intent.putExtra("MSG", MyConfig.MUSIC_RESUME);
 					intent.setClass(MainActivity.this, MusicPlayerService.class);
 					status = 1;
 					buttonPlay.setBackgroundResource(R.drawable.music_stop);
@@ -92,17 +92,22 @@ public class MainActivity extends Activity {
 				textViewArtist.setText(artist);
 				textViewTitle.setText(title);
 				buttonPlay.setBackgroundResource(R.drawable.music_stop);
-
-				Intent intent = new Intent();
+                
+				/*Intent intent = new Intent();
+				intent.putExtra("status", status);
 				intent.putExtra("url", url);
 				intent.putExtra("MSG", MyConfig.MUSIC_PALY);
 				intent.setClass(MainActivity.this, MusicPlayerService.class);
+				startService(intent);*/
 
 				status = 1;
 
-				startService(intent);
+				
 				
 				Intent intentActivity = new Intent();
+				intentActivity.putExtra("position", position);
+				intentActivity.putExtra("status", status);
+				intentActivity.putExtra("url", url);
 				intentActivity.putExtra("title", title);
 				intentActivity.putExtra("artist", artist);
 				intentActivity.putExtra("duration", String.valueOf(duration));

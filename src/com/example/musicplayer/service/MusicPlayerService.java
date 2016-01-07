@@ -1,10 +1,18 @@
 package com.example.musicplayer.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.example.musicplayer.PlayActivity;
+import com.example.musicplayer.R;
+import com.example.musicplayer.DB.GetMusicInfo;
+import com.example.musicplayer.Domain.LrcContent;
 import com.example.musicplayer.config.MyConfig;
+import com.example.musicplayer.myview.LrcView;
+import com.example.musicplayer.server.LrcProcess;
 
 import android.app.Service;
 import android.content.Intent;
@@ -15,6 +23,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import android.view.animation.AnimationUtils;
 
 public class MusicPlayerService extends Service {
 
@@ -22,6 +31,13 @@ public class MusicPlayerService extends Service {
 	private int progress;
 	private boolean isPause;
 	private MediaPlayer mediaPlayer = new MediaPlayer();
+	
+	private LrcProcess mLrcProcess; // 歌词处理
+	private List<LrcContent> lrcList = new ArrayList<LrcContent>(); // 存放歌词列表对象
+	private int index = 0;
+	
+	private int duration;
+	//private int current;
 
 	private int currentTime;
 
@@ -36,6 +52,7 @@ public class MusicPlayerService extends Service {
 					Intent intent2 = new Intent();
 					intent2.putExtra("currentTime", currentTime);
 					intent2.putExtra("isPause", isPause);
+					intent2.putExtra("lrcIndex", lrcIndex());
 					intent2.setAction("com.ron.tochange");
 					sendBroadcast(intent2);	
 					handler.sendEmptyMessageDelayed(1, 1000);
@@ -71,12 +88,15 @@ public class MusicPlayerService extends Service {
 		// TODO Auto-generated method stub
 
 		
+		
+		
 
 		if (mediaPlayer.isPlaying()) {
 			stop();
 		}
 		url = intent.getStringExtra("url");
 		progress = intent.getIntExtra("progress", 0);
+		//current = intent.getIntExtra("current", 0);
 		int msg = intent.getIntExtra("MSG", 0);
 
 		if (msg == MyConfig.MUSIC_PALY) {
@@ -190,5 +210,33 @@ public class MusicPlayerService extends Service {
 		}
 
 	}
+	
+
+	    
+	    public int lrcIndex() {  
+	        if(mediaPlayer.isPlaying()) {  
+	            currentTime = mediaPlayer.getCurrentPosition();  
+	            duration = mediaPlayer.getDuration();  
+	        }  
+	        if(currentTime < duration) {  
+	            for (int i = 0; i < lrcList.size(); i++) {  
+	                if (i < lrcList.size() - 1) {  
+	                    if (currentTime < lrcList.get(i).getLrcTime() && i == 0) {  
+	                        index = i;  
+	                    }  
+	                    if (currentTime > lrcList.get(i).getLrcTime()  
+	                            && currentTime < lrcList.get(i + 1).getLrcTime()) {  
+	                        index = i;  
+	                    }  
+	                }  
+	                if (i == lrcList.size() - 1  
+	                        && currentTime > lrcList.get(i).getLrcTime()) {  
+	                    index = i;  
+	                }  
+	            }  
+	        }  
+	        return index;  
+	    }  
+	
 
 }

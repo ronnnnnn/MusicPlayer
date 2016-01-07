@@ -14,22 +14,30 @@
         android:text="@string/music_player"
         android:textColor="#FFFFFF" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="10"
         android:gravity="center" >
 
-        <EditText
+        <ImageView
             android:id="@+id/iv_music_picture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/music_picture_default1"
             android:gravity="center"
-            android:singleLine="false"
-            android:text="this is test"
-            android:textColor="#00EEEE" />
-    </LinearLayout>
+             />
+
+        <com.example.musicplayer.myview.LrcView
+            android:id="@+id/lrcShowView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true" 
+            android:gravity="center"
+            android:textColor="#00EEEE"
+            android:text="this is text"
+            />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
